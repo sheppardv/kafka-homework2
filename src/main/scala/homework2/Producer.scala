@@ -29,7 +29,9 @@ class Producer(topic: String, brokers: String) {
 
   def sendMessages(): Unit = {
     while (true) {
-      ghClient.getNormalizedEvents.map { event =>
+      val events = ghClient.getNormalizedEvents
+      println(s"Found ${events.length} gh events ...")
+      events.map { event =>
         val message = event.asJson.noSpaces
         val key = event.id.toString
         val record = new ProducerRecord[String, String](topic, key, message)
